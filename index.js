@@ -1,5 +1,5 @@
 var express = require('express');
-const connection = require('./utils/conn')
+const connection = require('./utils/conn.js')
 const thgconn = require('./utils/thgconn');
 
 var bodyParser = require('body-parser');
@@ -35,7 +35,7 @@ app.get("/asl", (req, res) => {
 app.get("/login", (req, res) => {
     console.log("Inside login");
     
-    connection.query('SELECT user_id FROM users', function (error, results, fields) {
+    connection.query('SELECT emp_id FROM users', function (error, results, fields) {
         if (error) throw error;
         console.log('The result is: ', results[0]);
         var usr_id = results[0];
@@ -71,7 +71,7 @@ app.post("/login/validate", function(req, res) {
     var eid = req.body.employeeid;
     var epwd = req.body.password;
     
-    var selectQuery = `SELECT * FROM login WHERE emp_id = '${eid}' and password = '${epwd}'`;
+    var selectQuery = `SELECT * FROM users WHERE emp_id = '${eid}' and password = '${epwd}'`;
     
     connection.query(selectQuery, (err, results, fields) => {
         if(err) throw err;
@@ -95,28 +95,13 @@ app.post("/login/validate", function(req, res) {
     })    
 });
 
-app.post("/login/val", (req, res) => {
-    var eid = req.body.employeeid;
-    var epwd = req.body.password;
-
-    console.log(eid);
-    console.log(epwd);
-    var selectQuery = `SELECT * FROM login WHERE emp_id = '${eid}' and password = '${epwd}'`;
-    
-    connection.query(selectQuery, (err, results, fields) => {
-        if(err) throw err;
-        // console.log(results);
-        res.send(results[0].name);
-    })
-    
-});
 
 app.post("/login/id", (req, res) => {
     var eid = req.body.employeeid;
 
     console.log(eid);
 
-    var selectQuery = `SELECT * FROM login WHERE emp_id = '${eid}'`;
+    var selectQuery = `SELECT * FROM users WHERE emp_id = '${eid}'`;
     connection.query(selectQuery, (err, results, fields) => {
         var object = {};
         if(err) throw err;
@@ -128,7 +113,7 @@ app.post("/login/id", (req, res) => {
         else {
             object['status'] = "Success";
             object['name'] = results[0].name;
-            object['dept'] = results[0].dept;
+            object['dept'] = results[0].department;
         }
         console.log(results[0]);
         res.send(object);
