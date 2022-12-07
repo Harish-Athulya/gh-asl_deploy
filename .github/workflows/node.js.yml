@@ -25,4 +25,4 @@ jobs:
         cache: 'npm'
     - run: npm i
     - run: npm run build --if-present
-    - run: npm run dev 
+    - run: pm2 restart asl_deploy
